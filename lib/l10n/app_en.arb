@@ -2,5 +2,8 @@
   "appTitle" : "Hangman!",
   "gamePlay": "Hangman is a simple word guessing game. \nEach round you get to pick a letter from the alphabet. \nIf the word contains the letter, you are one step closer to success! \nIf it doesn't, the man is one step closer to certain death!",
   "languageInfo": "To change language, please change your devices system settings",
-  "startGame": "START GAME!"
+  "startGame": "START GAME!",
+  "hangmanTitle": "Guess the Word!",
+  "alphabet": "abcdefghijklmnopqrstuvwxyz",
+  "wordList": "House, Dog, Pitbull"
 }

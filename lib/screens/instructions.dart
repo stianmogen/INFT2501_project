@@ -8,7 +8,7 @@ class Instructions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const paddingSize = 20.0;
-    const TextStyle bodyStyle = TextStyle(fontSize: 14, color: Colors.black);
+    const TextStyle bodyStyle = TextStyle(fontSize: 15, color: Colors.black);
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.appTitle),
@@ -18,11 +18,11 @@ class Instructions extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.all(paddingSize),
-              child: Text(
-                AppLocalizations.of(context)!.gamePlay,
-                style: bodyStyle
-              )
+                padding: const EdgeInsets.all(paddingSize),
+                child: Text(
+                    AppLocalizations.of(context)!.gamePlay,
+                    style: bodyStyle
+                )
             ),
             Padding(
                 padding: const EdgeInsets.all(paddingSize),
@@ -32,25 +32,25 @@ class Instructions extends StatelessWidget {
                 )
             ),
             Padding(
-              padding: const EdgeInsets.all(paddingSize),
-              //https://flutter.dev/docs/release/breaking-changes/buttons
-              child: TextButton(
-                  style: ButtonStyle(
-                    foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                    overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                          (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.hovered))
-                          return Colors.blue.withOpacity(0.04);
-                        if (states.contains(MaterialState.focused) ||
-                            states.contains(MaterialState.pressed))
-                          return Colors.blue.withOpacity(0.12);
-                        return null; // Defer to the widget's default.
-                      },
+                padding: const EdgeInsets.all(paddingSize),
+                //https://flutter.dev/docs/release/breaking-changes/buttons
+                child: TextButton(
+                    style: ButtonStyle(
+                      foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                      overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                            (Set<MaterialState> states) {
+                          if (states.contains(MaterialState.hovered))
+                            return Colors.blue.withOpacity(0.04);
+                          if (states.contains(MaterialState.focused) ||
+                              states.contains(MaterialState.pressed))
+                            return Colors.blue.withOpacity(0.12);
+                          return null; // Defer to the widget's default.
+                        },
+                      ),
                     ),
-                  ),
-                  onPressed: () { },
-                  child: Text(AppLocalizations.of(context)!.startGame)
-              )
+                    onPressed: () { Navigator.pushNamed(context, '/hangman'); },
+                    child: Text(AppLocalizations.of(context)!.startGame)
+                )
             )
           ],
         ),
