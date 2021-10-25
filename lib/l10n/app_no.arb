@@ -1,0 +1,6 @@
+{
+  "appTitle": "Heng mannen!",
+  "gamePlay": "Hangman er et spill som går ut på å gjette riktig ord. \nDu vil hver runde kunne velge mellom bokstavene i alfabetet. \nGjetter du riktig bokstav er du et steg nærmere rikitg ord. \nGjetter du feil, er mannen et steg nærmere en sikker død!",
+  "languageInfo": "For å endre språk, vennligst endre din enhets systeminnstillinger",
+  "startGame": "START SPILL!"
+}
