@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+        //Named routes for navigation, docs: https://flutter.dev/docs/cookbook/navigation/named-routes
       routes: {
         '/': (context) => const Instructions(),
         '/hangman': (context) => const Hangman()
