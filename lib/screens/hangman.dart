@@ -20,6 +20,7 @@ class _Hangman extends State<Hangman>{
   String _correctWord = "";
   List<String> _correct = [];
   List<String> _incorrect = [];
+  List<String> _guessingState = [];
   final int wrongLimit = 10;
   List<String> alphabet = [];
 
@@ -45,10 +46,11 @@ class _Hangman extends State<Hangman>{
     List<String> potentialList = potential.split(", ");
     setState(() {
       _correctWord = potentialList[Random().nextInt(potentialList.length)];
+      _guessingState = ["hei"];
     });
   }
 
-  void winState(BuildContext context) {
+  void checkConditions(BuildContext context) {
 
   }
 
@@ -62,6 +64,12 @@ class _Hangman extends State<Hangman>{
         _incorrect.add(letter);
       });
     }
+  }
+
+  List<String> updateGuessingState() {
+    List<String> tmpList;
+    List<String> correctList = _correctWord.split(' ');
+    return correctList;
   }
 
   List<Widget> _buildButtonsFromAlphabet() {
@@ -91,6 +99,7 @@ class _Hangman extends State<Hangman>{
   Widget build(BuildContext context) {
     const paddingSize = 20.0;
     const TextStyle bodyStyle = TextStyle(fontSize: 15, color: Colors.black);
+    List<String> _guessingState = updateGuessingState();
     alphabet = AppLocalizations.of(context)!.alphabet.split('');
     return Scaffold(
       appBar: AppBar(
@@ -103,7 +112,7 @@ class _Hangman extends State<Hangman>{
             Padding(
                 padding: const EdgeInsets.all(paddingSize),
                 child: Text(
-                    _correctWord + " " + (_incorrect).toString(),
+                    _correctWord + " " + (_guessingState).toString(),
                     style: bodyStyle
                 )
             ),
