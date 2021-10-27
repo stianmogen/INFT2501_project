@@ -21,7 +21,13 @@ class _Hangman extends State<Hangman>{
   List<String> _incorrect = [];
   int _wrongCounter = 0;
   final int wrongLimit = 9;
-  List<ElevatedButton> buttons = [];
+  List<String> alphabet = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   void choose_correctWord(BuildContext context){
     String potential = AppLocalizations.of(context)!.wordList;
@@ -52,12 +58,20 @@ class _Hangman extends State<Hangman>{
   }
 
   List<Widget> _buildButtonsFromAlphabet() {
-    List<String>alphabet = AppLocalizations.of(context)!.alphabet.split('');
+    //List<String>alphabet = AppLocalizations.of(context)!.alphabet.split('');
+    List<ElevatedButton> buttons = [];
     for (var char in alphabet){
-      buttons.add(ElevatedButton(
-          onPressed: () => guessLetter(context, char),
-          child: Text(char)
-      ));
+      if (!_incorrect.contains(char) && !_correct.contains(char)) {
+        buttons.add(ElevatedButton(
+            onPressed: () => guessLetter(context, char),
+            child: Text(char)
+        ));
+      } else {
+        buttons.add(ElevatedButton(
+            onPressed: null,
+            child: Text(char)
+        ));
+      }
     }
     return buttons;
   }
@@ -70,6 +84,8 @@ class _Hangman extends State<Hangman>{
   Widget build(BuildContext context) {
     const paddingSize = 20.0;
     const TextStyle bodyStyle = TextStyle(fontSize: 15, color: Colors.black);
+    alphabet = AppLocalizations.of(context)!.alphabet.split('');
+    choose_correctWord(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.appTitle),
@@ -88,7 +104,7 @@ class _Hangman extends State<Hangman>{
             Padding(
                 padding: const EdgeInsets.all(paddingSize),
                 child: Text(
-                    _correctWord,
+                    _correct.join(),
                     style: bodyStyle
                 )
             ),
@@ -109,7 +125,7 @@ class _Hangman extends State<Hangman>{
                         },
                       ),
                     ),
-                    onPressed: () { choose_correctWord(context); },
+                    onPressed: () {  },
                     child: Text(AppLocalizations.of(context)!.alphabet)
                 )
             ),
