@@ -6,5 +6,8 @@
   "hangmanGame": "Gjett Ordet!",
   "alphabet": "abcdefghijklmnopqrstuvwxyzæøå",
   "wordList": "Hus, Hund, Pitbull",
-  "ready": "Klar?"
+  "ready": "Klar?",
+  "restart": "Prøv Igjen",
+  "winMessage": "Du vant! Ordet var: ",
+  "loseMessage": "Du tapte, ordet var: "
 }

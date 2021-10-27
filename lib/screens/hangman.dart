@@ -17,12 +17,13 @@ class Hangman extends StatefulWidget {
 
 class _Hangman extends State<Hangman>{
 
-  String _correctWord = "";
+  String _correctWord = "-";
   List<String> _correct = [];
   List<String> _incorrect = [];
-  List<String> _guessingState = [];
-  final int wrongLimit = 10;
+  final int wrongLimit = 9;
   List<String> alphabet = [];
+  bool _winState = false;
+  bool _loseState = false;
 
   @override
   void initState() {
@@ -38,20 +39,17 @@ class _Hangman extends State<Hangman>{
     _correct = [];
     _incorrect = [];
     choose_correctWord(context);
+    _winState = false;
+    _loseState = false;
   }
 
-  void choose_correctWord(BuildContext context){
+  void choose_correctWord(BuildContext context) {
     String potential = AppLocalizations.of(context)!.wordList;
     //Split method of string, doc: https://api.flutter.dev/flutter/dart-core/String/split.html
     List<String> potentialList = potential.split(", ");
     setState(() {
       _correctWord = potentialList[Random().nextInt(potentialList.length)];
-      _guessingState = ["hei"];
     });
-  }
-
-  void checkConditions(BuildContext context) {
-
   }
 
   void guessLetter(BuildContext context, String letter) {
@@ -66,17 +64,11 @@ class _Hangman extends State<Hangman>{
     }
   }
 
-  List<String> updateGuessingState() {
-    List<String> tmpList;
-    List<String> correctList = _correctWord.split(' ');
-    return correctList;
-  }
-
   List<Widget> _buildButtonsFromAlphabet() {
     //List<String>alphabet = AppLocalizations.of(context)!.alphabet.split('');
     List<ElevatedButton> buttons = [];
     for (var char in alphabet){
-      if (!_incorrect.contains(char) && !_correct.contains(char)) {
+      if (!_incorrect.contains(char) && !_correct.contains(char) && !_winState && !_loseState) {
         buttons.add(ElevatedButton(
             onPressed: () => guessLetter(context, char),
             child: Text(char)
@@ -91,19 +83,30 @@ class _Hangman extends State<Hangman>{
     return buttons;
   }
 
-  //void initState() {
-  //
-  //}
+  List<String> updateGuessedState() {
+    List<String> guessedWordsList = _correctWord.split('');
+    return guessedWordsList.map((e) => _correct.contains(e.toLowerCase()) ? e : " _ ").toList();
+  }
+
+
+  String userFeedback(String _guessed){
+    if (_winState) return AppLocalizations.of(context)!.winMessage + " " + _correctWord;
+    else if (_loseState) return AppLocalizations.of(context)!.loseMessage + " " + _correctWord;
+    else return _guessed;
+  }
 
   @override
   Widget build(BuildContext context) {
     const paddingSize = 20.0;
     const TextStyle bodyStyle = TextStyle(fontSize: 15, color: Colors.black);
-    List<String> _guessingState = updateGuessingState();
+    List<String> _guessingState = updateGuessedState();
     alphabet = AppLocalizations.of(context)!.alphabet.split('');
+    if (_guessingState.join() == _correctWord) _winState = true;
+    if (_incorrect.length >= wrongLimit) _loseState = true;
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.appTitle),
+        title: Text(AppLocalizations.of(context)!.hangmanGame),
+        //title: Text(_incorrect.length.toString() + " - " + wrongLimit.toString()),
       ),
       body: Center(
 
@@ -112,7 +115,7 @@ class _Hangman extends State<Hangman>{
             Padding(
                 padding: const EdgeInsets.all(paddingSize),
                 child: Text(
-                    _correctWord + " " + (_guessingState).toString(),
+                    userFeedback(_guessingState.join()),
                     style: bodyStyle
                 )
             ),
@@ -135,6 +138,27 @@ class _Hangman extends State<Hangman>{
                   ],
 
               )
+            ),
+            Padding(
+                padding: const EdgeInsets.all(1),
+                //https://flutter.dev/docs/release/breaking-changes/buttons
+                child: TextButton(
+                    style: ButtonStyle(
+                      foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                      overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                            (Set<MaterialState> states) {
+                          if (states.contains(MaterialState.hovered))
+                            return Colors.blue.withOpacity(0.04);
+                          if (states.contains(MaterialState.focused) ||
+                              states.contains(MaterialState.pressed))
+                            return Colors.blue.withOpacity(0.12);
+                          return null; // Defer to the widget's default.
+                        },
+                      ),
+                    ),
+                    onPressed: () { restart(); },
+                    child: Text(AppLocalizations.of(context)!.restart)
+                )
             )
           ],
         ),
