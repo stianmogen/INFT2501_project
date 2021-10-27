@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -19,14 +20,23 @@ class _Hangman extends State<Hangman>{
   String _correctWord = "";
   List<String> _correct = [];
   List<String> _incorrect = [];
-  int _wrongCounter = 0;
-  final int wrongLimit = 9;
+  final int wrongLimit = 10;
   List<String> alphabet = [];
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    SchedulerBinding.instance!.addPostFrameCallback((_) {
+      // your method where use the context
+      // Example navigate:
+      choose_correctWord(context);
+    });
+  }
+
+  void restart() {
+    _correct = [];
+    _incorrect = [];
+    choose_correctWord(context);
   }
 
   void choose_correctWord(BuildContext context){
@@ -45,14 +55,11 @@ class _Hangman extends State<Hangman>{
   void guessLetter(BuildContext context, String letter) {
     if (_correctWord.toLowerCase().contains(letter.toLowerCase())) {
       setState(() {
-        _incorrect.add(letter);
-        _wrongCounter == _incorrect.length;
+        _correct.add(letter);
       });
-      _correct.add(letter);
     } else {
       setState(() {
         _incorrect.add(letter);
-        _wrongCounter == _incorrect.length;
       });
     }
   }
@@ -85,7 +92,6 @@ class _Hangman extends State<Hangman>{
     const paddingSize = 20.0;
     const TextStyle bodyStyle = TextStyle(fontSize: 15, color: Colors.black);
     alphabet = AppLocalizations.of(context)!.alphabet.split('');
-    choose_correctWord(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.appTitle),
@@ -97,37 +103,17 @@ class _Hangman extends State<Hangman>{
             Padding(
                 padding: const EdgeInsets.all(paddingSize),
                 child: Text(
-                    AppLocalizations.of(context)!.hangmanGame,
+                    _correctWord + " " + (_incorrect).toString(),
                     style: bodyStyle
                 )
             ),
             Padding(
-                padding: const EdgeInsets.all(paddingSize),
-                child: Text(
-                    _correct.join(),
-                    style: bodyStyle
-                )
-            ),
-            Padding(
-                padding: const EdgeInsets.all(paddingSize),
+                padding: EdgeInsets.all(paddingSize),
                 //https://flutter.dev/docs/release/breaking-changes/buttons
-                child: TextButton(
-                    style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                      overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                            (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.hovered))
-                            return Colors.blue.withOpacity(0.04);
-                          if (states.contains(MaterialState.focused) ||
-                              states.contains(MaterialState.pressed))
-                            return Colors.blue.withOpacity(0.12);
-                          return null; // Defer to the widget's default.
-                        },
-                      ),
-                    ),
-                    onPressed: () {  },
-                    child: Text(AppLocalizations.of(context)!.alphabet)
-                )
+                child: Image(
+                  image: AssetImage('assets/images/hm${_incorrect.length+1}.png'),
+                  height: 200
+                ),
             ),
             Padding(
                 padding: const EdgeInsets.all(5),
