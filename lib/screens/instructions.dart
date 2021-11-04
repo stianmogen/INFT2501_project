@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+///Instructions class to show simple game play instructions to user
 class Instructions extends StatelessWidget {
   const Instructions({Key? key}) : super(key: key);
 
@@ -14,7 +15,6 @@ class Instructions extends StatelessWidget {
         title: Text(AppLocalizations.of(context)!.appTitle),
       ),
       body: Center(
-
         child: Column(
           children: <Widget>[
             Padding(
@@ -33,7 +33,6 @@ class Instructions extends StatelessWidget {
             ),
             Padding(
                 padding: const EdgeInsets.all(paddingSize),
-                //https://flutter.dev/docs/release/breaking-changes/buttons
                 child: TextButton(
                     style: ButtonStyle(
                       foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
@@ -44,10 +43,11 @@ class Instructions extends StatelessWidget {
                           if (states.contains(MaterialState.focused) ||
                               states.contains(MaterialState.pressed))
                             return Colors.blue.withOpacity(0.12);
-                          return null; // Defer to the widget's default.
+                          return null;
                         },
                       ),
                     ),
+                    //Button on pressed navigates to the game play screen
                     onPressed: () { Navigator.pushNamed(context, '/hangman'); },
                     child: Text(AppLocalizations.of(context)!.startGame)
                 )
@@ -55,7 +55,6 @@ class Instructions extends StatelessWidget {
           ],
         ),
       ),
-      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

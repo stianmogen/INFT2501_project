@@ -6,15 +6,17 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
-// Hangman is a stateful widget
-// _Hangman class will have mutable objects, interacted with by the user
-// Described in documentation: https://flutter.dev/docs/development/ui/interactive
+/// Hangman is a stateful widget
+///
+/// _Hangman class will have mutable objects, interacted with by the user
+/// Described in documentation: https://flutter.dev/docs/development/ui/interactive
 class Hangman extends StatefulWidget {
   const Hangman({Key? key}) : super(key: key);
   @override
   State<Hangman> createState() => _Hangman();
 }
 
+///_Hangman class for game
 class _Hangman extends State<Hangman>{
 
   String _correctWord = "-";
@@ -25,24 +27,30 @@ class _Hangman extends State<Hangman>{
   bool _winState = false;
   bool _loseState = false;
 
+  ///Initializes state and chooses a correct word
   @override
   void initState() {
     super.initState();
+    //PostFrameCallback for choosing correct word when initializing state
     SchedulerBinding.instance!.addPostFrameCallback((_) {
-      // your method where use the context
-      // Example navigate:
       choose_correctWord(context);
     });
   }
 
+  ///Restart method, sets the variables to correct state
   void restart() {
     _correct = [];
     _incorrect = [];
+    //New word to be chosen at each restard
     choose_correctWord(context);
     _winState = false;
     _loseState = false;
   }
 
+  ///Method to choose correct word
+  ///
+  /// Uses the AppLocalization of "Word list", to find the list of words for current language
+  /// From these words, the appliation chooses one at random
   void choose_correctWord(BuildContext context) {
     String potential = AppLocalizations.of(context)!.wordList;
     //Split method of string, doc: https://api.flutter.dev/flutter/dart-core/String/split.html
@@ -52,6 +60,10 @@ class _Hangman extends State<Hangman>{
     });
   }
 
+  ///Method to guess letter on the correct word
+  ///
+  /// Adds character to correct list if correct
+  /// Adds character to incorrect list if incorrect
   void guessLetter(BuildContext context, String letter) {
     if (_correctWord.toLowerCase().contains(letter.toLowerCase())) {
       setState(() {
@@ -64,6 +76,10 @@ class _Hangman extends State<Hangman>{
     }
   }
 
+  ///Builds a list of elevated buttons to represent the alphabet
+  ///
+  ///Each time a character is chosen, the alphabet is regenerated with corresponding button disabled
+  ///If correct word is guessed, or the max limit for guesses is reached, the entire alphabet is disabled
   List<Widget> _buildButtonsFromAlphabet() {
     //List<String>alphabet = AppLocalizations.of(context)!.alphabet.split('');
     List<ElevatedButton> buttons = [];
@@ -83,6 +99,7 @@ class _Hangman extends State<Hangman>{
     return buttons;
   }
 
+  ///Shows AlertDialog with information given on systems language
   void helpDialog() {
     showDialog(context: context, builder: (BuildContext context) {
       return AlertDialog(
@@ -96,7 +113,10 @@ class _Hangman extends State<Hangman>{
     });
   }
 
+  ///Help button method calls helpDialog method
   Widget helpButton(){
+    //This particular style can be found in documentation:
+    //https://flutter.dev/docs/release/breaking-changes/buttons
     return TextButton(
       style: ButtonStyle(
         foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
@@ -118,6 +138,7 @@ class _Hangman extends State<Hangman>{
     );
   }
 
+  ///Restard button resets the state with restart method
   Widget restartButton(){
     return TextButton(
         style: ButtonStyle(
@@ -140,58 +161,68 @@ class _Hangman extends State<Hangman>{
     );
   }
 
-
-
+  ///Updates the guessed state
+  ///
+  /// Uses all correct letters guessed list, and maps to each corresponding letter in correct word
+  /// If a letter from the correct word is guessed, it is registered and displayed to the user
   List<String> updateGuessedState() {
     List<String> guessedWordsList = _correctWord.split('');
+    //maps so that if a correct letter is guessed, this letter is registered
+    //if it is not guessed it is displayed as an underscore: " _ "
     return guessedWordsList.map((e) => _correct.contains(e.toLowerCase()) ? e : " _ ").toList();
   }
 
 
+  ///Gives feedback to the user as to the current game state
+  ///
+  ///If we have won or lost, we give this feedback to the user
+  ///If we are currently plating, the guessing state is displayed
   String userFeedback(String _guessed){
+    //if won or lost, the correct word with the corresponding win/lose messge is returned
     if (_winState) return AppLocalizations.of(context)!.winMessage + " " + _correctWord;
     else if (_loseState) return AppLocalizations.of(context)!.loseMessage + " " + _correctWord;
     else return _guessed;
   }
 
+  ///Builds the statefull widgets the user iteracts with
   @override
   Widget build(BuildContext context) {
-    const paddingSize = 20.0;
     const TextStyle bodyStyle = TextStyle(fontSize: 15, color: Colors.black);
     List<String> _guessingState = updateGuessedState();
     alphabet = AppLocalizations.of(context)!.alphabet.split('');
+    //Win state and loss state is decided by there given conditions
     if (_guessingState.join() == _correctWord) _winState = true;
     if (_incorrect.length >= wrongLimit) _loseState = true;
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.hangmanGame),
-        //title: Text(_incorrect.length.toString() + " - " + wrongLimit.toString()),
       ),
       body: Center(
 
         child: Column(
           children: <Widget>[
             Padding(
-                padding: const EdgeInsets.all(paddingSize),
+                padding: const EdgeInsets.all(20),
                 child: Text(
                     userFeedback(_guessingState.join()),
                     style: bodyStyle
                 )
             ),
             Padding(
-                padding: EdgeInsets.all(paddingSize),
-                //https://flutter.dev/docs/release/breaking-changes/buttons
+                padding: EdgeInsets.all(20),
                 child: Image(
+                  //guessing state image is decided by the amount of incorrect guessing
+                  //image is fethced from assets folder
                   image: AssetImage('assets/images/hm${_incorrect.length+1}.png'),
                   height: 200
                 ),
             ),
             Padding(
                 padding: const EdgeInsets.all(5),
-                //https://flutter.dev/docs/release/breaking-changes/buttons
                 child: Column(
                   children: <Widget>[
                     Wrap(
+                      //wraps the list of buttons returned from build alphabet method
                       children: _buildButtonsFromAlphabet()
                     )
                   ],
@@ -200,9 +231,9 @@ class _Hangman extends State<Hangman>{
             ),
             Padding(
                 padding: const EdgeInsets.all(3),
-                //https://flutter.dev/docs/release/breaking-changes/buttons
                 child: Wrap(
                   children: <Widget>[
+                    //restart- and helpButton wrapped as children at the bottom of the app
                     restartButton(), helpButton()
                   ]
                 )
@@ -210,7 +241,6 @@ class _Hangman extends State<Hangman>{
           ],
         ),
       ),
-      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
