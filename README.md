@@ -4,7 +4,8 @@ Hangman Flutter project for the course INFT2501
 
 ## Development information
 
-The project was developed using an emulator of the Google Pixel 2 running on Android 12.0. 
+The project was developed using an emulator of the Google Pixel 2 running on Android 12.0 (S).
+The project does support Android versions as low as 7.0 (Nougat).
 
 ### Clone project
 
