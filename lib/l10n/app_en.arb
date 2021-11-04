@@ -5,9 +5,10 @@
   "startGame": "START GAME!",
   "hangmanGame": "Guess the Word!",
   "alphabet": "abcdefghijklmnopqrstuvwxyz",
-  "wordList": "House, Dog, Pitbull",
+  "wordList": "House, Dog, Pitbull, Game",
   "ready": "Ready?",
   "restart": "Restart",
   "winMessage": "You won! The word was: ",
-  "loseMessage": "You lost, the word was: "
+  "loseMessage": "You lost, the word was: ",
+  "help": "Help"
 }

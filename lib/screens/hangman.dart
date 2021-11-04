@@ -71,17 +71,76 @@ class _Hangman extends State<Hangman>{
       if (!_incorrect.contains(char) && !_correct.contains(char) && !_winState && !_loseState) {
         buttons.add(ElevatedButton(
             onPressed: () => guessLetter(context, char),
-            child: Text(char)
+            child: Text(char.toUpperCase())
         ));
       } else {
         buttons.add(ElevatedButton(
             onPressed: null,
-            child: Text(char)
+            child: Text(char.toUpperCase())
         ));
       }
     }
     return buttons;
   }
+
+  void helpDialog() {
+    showDialog(context: context, builder: (BuildContext context) {
+      return AlertDialog(
+          title: Text(
+            AppLocalizations.of(context)!.help,
+          ),
+          content: Text(
+              AppLocalizations.of(context)!.gamePlay
+          )
+      );
+    });
+  }
+
+  Widget helpButton(){
+    return TextButton(
+      style: ButtonStyle(
+        foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+        overlayColor: MaterialStateProperty.resolveWith<Color?>(
+              (Set<MaterialState> states) {
+            if (states.contains(MaterialState.hovered)) {
+              return Colors.blue.withOpacity(0.04);
+            }
+            if (states.contains(MaterialState.focused) ||
+                states.contains(MaterialState.pressed)) {
+              return Colors.blue.withOpacity(0.12);
+            }
+            return null; // Defer to the widget's default.
+          },
+        ),
+      ),
+      onPressed: () { helpDialog(); },
+      child: Text(AppLocalizations.of(context)!.help)
+    );
+  }
+
+  Widget restartButton(){
+    return TextButton(
+        style: ButtonStyle(
+          foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+          overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                (Set<MaterialState> states) {
+              if (states.contains(MaterialState.hovered)) {
+                return Colors.blue.withOpacity(0.04);
+              }
+              if (states.contains(MaterialState.focused) ||
+                  states.contains(MaterialState.pressed)) {
+                return Colors.blue.withOpacity(0.12);
+              }
+              return null; // Defer to the widget's default.
+            },
+          ),
+        ),
+        onPressed: () { restart(); },
+        child: Text(AppLocalizations.of(context)!.restart)
+    );
+  }
+
+
 
   List<String> updateGuessedState() {
     List<String> guessedWordsList = _correctWord.split('');
@@ -140,26 +199,14 @@ class _Hangman extends State<Hangman>{
               )
             ),
             Padding(
-                padding: const EdgeInsets.all(1),
+                padding: const EdgeInsets.all(3),
                 //https://flutter.dev/docs/release/breaking-changes/buttons
-                child: TextButton(
-                    style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                      overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                            (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.hovered))
-                            return Colors.blue.withOpacity(0.04);
-                          if (states.contains(MaterialState.focused) ||
-                              states.contains(MaterialState.pressed))
-                            return Colors.blue.withOpacity(0.12);
-                          return null; // Defer to the widget's default.
-                        },
-                      ),
-                    ),
-                    onPressed: () { restart(); },
-                    child: Text(AppLocalizations.of(context)!.restart)
+                child: Wrap(
+                  children: <Widget>[
+                    restartButton(), helpButton()
+                  ]
                 )
-            )
+            ),
           ],
         ),
       ),

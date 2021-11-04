@@ -5,9 +5,10 @@
   "startGame": "START SPILL!",
   "hangmanGame": "Gjett Ordet!",
   "alphabet": "abcdefghijklmnopqrstuvwxyzæøå",
-  "wordList": "Hus, Hund, Pitbull",
+  "wordList": "Hus, Hund, Pitbull, Spill",
   "ready": "Klar?",
   "restart": "Prøv Igjen",
   "winMessage": "Du vant! Ordet var: ",
-  "loseMessage": "Du tapte, ordet var: "
+  "loseMessage": "Du tapte, ordet var: ",
+  "help": "Hjelp"
 }
