@@ -10,12 +10,17 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-  // This widget is the root of your application.
+
+  ///Builds the widgets for user interaction
+  ///
+  /// Defined AppLocalization for different system languages
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Hangman',
+      //initial route is set to instructions screen defined in "routes"
       initialRoute: '/',
+      //Localized delegates and supported locales defined
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(
